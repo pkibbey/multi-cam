@@ -18,86 +18,33 @@ function VideoApp() {
     isAudioEnabled,
     toggleVideo,
     toggleAudio,
-    call,
     isLoading,
     error
   } = usePeerContext();
 
   if (isLoading) {
-    const debugLines = error?.includes('Debug:') ? error.split('Debug: ')[1]?.split(' | ') || [] : [];
-    
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
-        <Card className="p-8 text-center max-w-md">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <Card className="p-8 text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
           <h2 className="text-xl font-semibold mb-2">Setting up video chat...</h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
+          <p className="text-gray-600 dark:text-gray-400">
             Initializing camera, microphone, and network connection
           </p>
-          
-          {debugLines.length > 0 && (
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-left">
-              <p className="font-semibold text-gray-800 text-sm mb-2">Setup Progress:</p>
-              <div className="space-y-1">
-                {debugLines.slice(-3).map((line, i) => (
-                  <p key={i} className="text-xs text-gray-600 font-mono">{line}</p>
-                ))}
-              </div>
-            </div>
-          )}
         </Card>
       </div>
     );
   }
 
   if (error) {
-    const isHTTPSError = error.includes('HTTPS is required');
-    const isTimeoutError = error.includes('timeout');
-    const isPermissionError = error.includes('denied');
-    
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <Card className="p-8 text-center max-w-md">
           <div className="text-red-500 text-4xl mb-4">⚠️</div>
           <h2 className="text-xl font-semibold mb-2 text-red-600">Connection Error</h2>
           <p className="text-gray-600 dark:text-gray-400 mb-4">
             {error}
           </p>
-          
-          {isHTTPSError && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4 text-sm text-left">
-              <p className="font-semibold text-yellow-800">To fix this:</p>
-              <ul className="mt-2 space-y-1 text-yellow-700">
-                <li>• Access the site using HTTPS</li>
-                <li>• Or test on localhost during development</li>
-                <li>• Mobile browsers require HTTPS for camera access</li>
-              </ul>
-            </div>
-          )}
-          
-          {isPermissionError && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 text-sm text-left">
-              <p className="font-semibold text-blue-800">To fix this:</p>
-              <ul className="mt-2 space-y-1 text-blue-700">
-                <li>• Allow camera/microphone when prompted</li>
-                <li>• Check browser settings for site permissions</li>
-                <li>• Try refreshing and allowing access</li>
-              </ul>
-            </div>
-          )}
-          
-          {isTimeoutError && (
-            <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-4 text-sm text-left">
-              <p className="font-semibold text-orange-800">To fix this:</p>
-              <ul className="mt-2 space-y-1 text-orange-700">
-                <li>• Check your internet connection</li>
-                <li>• Try a different network if on mobile</li>
-                <li>• Disable VPN if enabled</li>
-                <li>• Clear browser cache and cookies</li>
-              </ul>
-            </div>
-          )}
-          
           <Button onClick={() => window.location.reload()}>
             Try Again
           </Button>
@@ -134,13 +81,6 @@ function VideoApp() {
             
             <div className="text-sm text-gray-600 dark:text-gray-400">
               Connected devices: {connections.length + (localStream ? 1 : 0)}
-              <a 
-                href="/debug" 
-                className="ml-4 text-blue-500 hover:text-blue-600 underline"
-                target="_blank"
-              >
-                Debug
-              </a>
             </div>
           </div>
         </Card>
@@ -154,7 +94,6 @@ function VideoApp() {
           peerId={peerId}
           isConnected={isConnected}
           connectionCount={connections.length}
-          onCall={call}
         />
       </div>
     </div>
