@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
-import { useVideoChat } from "@/lib/useVideoChat";
+import { useVideoChat, useWanIp, type VideoStats } from "@/lib/useVideoChat";
 
 export default function Home() {
 	const { allPeers, stats } = useVideoChat();
@@ -29,9 +29,10 @@ function VideoPlayer({
 	stats,
 }: {
 	stream: MediaStream;
-	stats?: { bitrate?: number; width?: number; height?: number };
+	stats?: VideoStats;
 }) {
 	const ref = useRef<HTMLVideoElement>(null);
+	const wanIp = useWanIp();
 	useEffect(() => {
 		if (ref.current) {
 			ref.current.srcObject = stream;
@@ -46,6 +47,43 @@ function VideoPlayer({
 				className="rounded w-full aspect-video bg-black"
 				muted
 			/>
+			{stats && (
+				<div className="mt-1 text-xs text-blue-700 text-left w-full">
+					{stats.width && stats.height && (
+						<div>
+							Resolution: {stats.width}x{stats.height}
+						</div>
+					)}
+					{typeof stats.bitrate === "number" && (
+						<div>Bitrate: {Math.round(stats.bitrate / 1000)} kbps</div>
+					)}
+					{stats.codec && <div>Codec: {stats.codec}</div>}
+					{typeof stats.framesPerSecond === "number" && (
+						<div>FPS: {stats.framesPerSecond}</div>
+					)}
+					{typeof stats.framesDecoded === "number" && (
+						<div>Frames Decoded: {stats.framesDecoded}</div>
+					)}
+					{typeof stats.framesDropped === "number" && (
+						<div>Frames Dropped: {stats.framesDropped}</div>
+					)}
+					{typeof stats.jitter === "number" && (
+						<div>Jitter: {stats.jitter}</div>
+					)}
+					{typeof stats.packetsLost === "number" && (
+						<div>Packets Lost: {stats.packetsLost}</div>
+					)}
+					{typeof stats.packetsReceived === "number" && (
+						<div>Packets Received: {stats.packetsReceived}</div>
+					)}
+					{typeof stats.frameDelay === "number" && (
+						<div>Frame Delay: {stats.frameDelay.toFixed(2)}s</div>
+					)}
+				</div>
+			)}
+			<div className="mt-1 text-xs text-green-700">
+				WAN IP: {wanIp || "..."}
+			</div>
 		</div>
 	);
 }

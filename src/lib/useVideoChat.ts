@@ -1,23 +1,32 @@
 import Peer from "peerjs";
+import { publicIpv4 } from "public-ip";
 import { useEffect, useRef, useState } from "react";
-import { io, type Socket } from "socket.io-client";
+import { io } from "socket.io-client";
 import { PEER_SERVER, SOCKET_SERVER } from "@/config/network";
+
+// Type for video stats
+export type VideoStats = {
+	bitrate?: number;
+	width?: number;
+	height?: number;
+	codec?: string;
+	framesPerSecond?: number;
+	framesDecoded?: number;
+	framesDropped?: number;
+	jitter?: number;
+	packetsLost?: number;
+	packetsReceived?: number;
+	frameDelay?: number;
+};
 
 export function useVideoChat() {
 	const [peers, setPeers] = useState<{ [id: string]: MediaStream }>({});
-	const [peerConnections, setPeerConnections] = useState<{
-		[id: string]: RTCPeerConnection;
-	}>({});
-	const [stats, setStats] = useState<{
-		[id: string]: { bitrate?: number; width?: number; height?: number };
-	}>({});
+	const [stats, setStats] = useState<{ [id: string]: VideoStats }>({});
 	const localStream = useRef<MediaStream | null>(null);
 	const peerInstance = useRef<Peer | null>(null);
-	const socketRef = useRef<Socket | null>(null);
+	const socketRef = useRef<ReturnType<typeof io> | null>(null);
 	const dataChannels = useRef<{ [id: string]: RTCDataChannel }>({});
-	const prevStats = useRef<{
-		[id: string]: { bytesReceived: number; timestamp: number };
-	}>({});
+	const peerConnections = useRef<{ [id: string]: RTCPeerConnection }>({});
 
 	// Add local stream to peers for unified rendering
 	const allPeers = { local: localStream.current, ...peers };
@@ -74,10 +83,7 @@ export function useVideoChat() {
 											);
 											setPeers((prev) => ({ ...prev, [pid]: remoteStream }));
 											if (call.peerConnection) {
-												setPeerConnections((prev) => ({
-													...prev,
-													[pid]: call.peerConnection,
-												}));
+												peerConnections.current[pid] = call.peerConnection;
 											}
 										});
 										call.on("close", () => {
@@ -101,10 +107,7 @@ export function useVideoChat() {
 										);
 										setPeers((prev) => ({ ...prev, [pid]: remoteStream }));
 										if (call.peerConnection) {
-											setPeerConnections((prev) => ({
-												...prev,
-												[pid]: call.peerConnection,
-											}));
+											peerConnections.current[pid] = call.peerConnection;
 										}
 									});
 									call.on("close", () => {
@@ -134,10 +137,7 @@ export function useVideoChat() {
 							);
 							setPeers((prev) => ({ ...prev, [call.peer]: remoteStream }));
 							if (call.peerConnection) {
-								setPeerConnections((prev) => ({
-									...prev,
-									[call.peer]: call.peerConnection,
-								}));
+								peerConnections.current[call.peer] = call.peerConnection;
 							}
 						});
 						// Listen for keep-alive data channel on incoming calls
@@ -205,42 +205,105 @@ export function useVideoChat() {
 	}, []);
 
 	// Periodically poll stats for each peer connection
-	// useEffect(() => {
-	// 	const interval = setInterval(() => {
-	// 		Object.entries(peerConnections).forEach(([id, pc]) => {
-	// 			pc.getStats(null).then((report) => {
-	// 				let bitrate: number | undefined;
-	// 				let width: number | undefined;
-	// 				let height: number | undefined;
-	// 				report.forEach((stat) => {
-	// 					const s = stat as { [key: string]: unknown };
-	// 					if (s.type === "inbound-rtp" && s.kind === "video") {
-	// 						if (typeof s.bitrateMean === "number") {
-	// 							bitrate = s.bitrateMean;
-	// 						} else if (typeof s.bytesReceived === "number") {
-	// 							bitrate = s.bytesReceived as number;
-	// 						}
-	// 					}
-	// 					if (
-	// 						s.type === "track" &&
-	// 						typeof s.frameWidth === "number" &&
-	// 						typeof s.frameHeight === "number"
-	// 					) {
-	// 						width = s.frameWidth;
-	// 						height = s.frameHeight;
-	// 					}
-	// 				});
-	// 				setStats((prev) => ({ ...prev, [id]: { bitrate, width, height } }));
-	// 			});
-	// 		});
-	// 	}, 2000);
-	// 	return () => clearInterval(interval);
-	// }, [peerConnections]);
+	useEffect(() => {
+		const interval = setInterval(() => {
+			Object.entries(peerConnections.current).forEach(([id, pc]) => {
+				pc.getStats(null).then((report) => {
+					let bitrate: number | undefined;
+					let width: number | undefined;
+					let height: number | undefined;
+					let codec: string | undefined;
+					let framesPerSecond: number | undefined;
+					let framesDecoded: number | undefined;
+					let framesDropped: number | undefined;
+					let jitter: number | undefined;
+					let packetsLost: number | undefined;
+					let packetsReceived: number | undefined;
+					let frameDelay: number | undefined;
+					let codecId: string | undefined;
+					// Use generic Record<string, unknown> for statsMap and stat typing for compatibility
+					const statsMap: Record<string, Record<string, unknown>> = {};
+					report.forEach((stat) => {
+						const s = stat as Record<string, unknown>;
+						statsMap[s.id as string] = s;
+						if (s.type === "inbound-rtp" && s.kind === "video") {
+							if (typeof s.bytesReceived === "number") {
+								bitrate = s.bytesReceived;
+							}
+							if (typeof s.codecId === "string") {
+								codecId = s.codecId;
+							}
+							if (typeof s.jitter === "number") {
+								jitter = s.jitter;
+							}
+							if (typeof s.packetsLost === "number") {
+								packetsLost = s.packetsLost;
+							}
+							if (typeof s.packetsReceived === "number") {
+								packetsReceived = s.packetsReceived;
+							}
+						}
+						if (
+							s.type === "track" &&
+							typeof s.frameWidth === "number" &&
+							typeof s.frameHeight === "number"
+						) {
+							width = s.frameWidth as number;
+							height = s.frameHeight as number;
+						}
+						if (s.type === "track") {
+							if (typeof s.framesPerSecond === "number") {
+								framesPerSecond = s.framesPerSecond as number;
+							}
+							if (typeof s.framesDecoded === "number") {
+								framesDecoded = s.framesDecoded as number;
+							}
+							if (typeof s.framesDropped === "number") {
+								framesDropped = s.framesDropped as number;
+							}
+							if (
+								typeof s.totalDecodeTime === "number" &&
+								typeof s.framesDecoded === "number" &&
+								(s.framesDecoded as number) > 0
+							) {
+								frameDelay =
+									(s.totalDecodeTime as number) / (s.framesDecoded as number);
+							}
+						}
+					});
+					if (codecId && statsMap[codecId]) {
+						const codecStat = statsMap[codecId];
+						if (typeof codecStat.mimeType === "string") {
+							codec = codecStat.mimeType;
+						}
+					}
+					setStats((prev) => ({
+						...prev,
+						[id]: {
+							bitrate,
+							width,
+							height,
+							codec,
+							framesPerSecond,
+							framesDecoded,
+							framesDropped,
+							jitter,
+							packetsLost,
+							packetsReceived,
+							frameDelay,
+						},
+					}));
+				});
+			});
+		}, 2000);
+		return () => clearInterval(interval);
+	}, []);
 
 	// Periodically send keep-alive pings
 	useEffect(() => {
 		const interval = setInterval(() => {
-			Object.entries(dataChannels.current).forEach(([id, dc]) => {
+			// Remove unused parameter warning for dataChannels
+			Object.values(dataChannels.current).forEach((dc) => {
 				if (dc.readyState === "open") {
 					dc.send("ping");
 				}
@@ -253,4 +316,14 @@ export function useVideoChat() {
 		allPeers,
 		stats,
 	};
+}
+
+export function useWanIp() {
+	const [wanIp, setWanIp] = useState<string | null>(null);
+	useEffect(() => {
+		publicIpv4()
+			.then((ip: string) => setWanIp(ip))
+			.catch(() => setWanIp("Unavailable"));
+	}, []);
+	return wanIp;
 }
