@@ -1,4 +1,3 @@
-
 const { createServer } = require('https');
 const { parse } = require('url');
 const next = require('next');
@@ -33,8 +32,7 @@ app.prepare().then(() => {
       process.exit(1);
     })
     .listen(port, hostname, () => {
-      console.log(`🚀 HTTPS server ready on https://localhost:${port}`);
+      console.log(`🚀 HTTPS server ready`);
       console.log(`📱 Mobile access: https://${require('os').networkInterfaces().en0?.find(i => i.family === 'IPv4')?.address || 'YOUR_LOCAL_IP'}:${port}`);
-      console.log('📋 Make sure your mobile device is on the same network');
     });
 });

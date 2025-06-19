@@ -1,10 +1,10 @@
-'use client';
-
 import { useEffect, useRef, useState } from 'react';
 import Peer, { MediaConnection } from 'peerjs';
-import { Card } from '@/components/ui/card';
 import { io, Socket } from 'socket.io-client';
+import { Card } from '@/components/ui/card';
 import { PEER_SERVER, SOCKET_SERVER } from '@/config/network';
+
+const ROOM = 'main-room';
 
 export default function Home() {
   const [peers, setPeers] = useState<{ [id: string]: MediaStream }>({});
@@ -15,8 +15,9 @@ export default function Home() {
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    // Get local media
+    let destroyed = false;
     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
+      if (destroyed) return;
       localStream.current = stream;
       if (localVideoRef.current) {
         localVideoRef.current.srcObject = stream;
@@ -68,7 +69,7 @@ export default function Home() {
       });
     });
     return () => {
-      let destroyed = false;
+      destroyed = true;
       peerInstance.current?.destroy();
       localStream.current?.getTracks().forEach(track => track.stop());
       socketRef.current?.disconnect();

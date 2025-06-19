@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:https": "node server-https.js",
+    "peer": "peerjs --port 9000 --key peerjs --path /",
+    "peer:https": "peerjs --port 9000 --key peerjs --path / --sslkey certs/key.pem --sslcert certs/cert.pem --host 0.0.0.0",
+    "socketio": "node server-https-socketio.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -23,6 +26,7 @@
     "react-dom": "^19.0.0",
     "react-use": "^17.6.0",
     "shadcn-ui": "^0.9.5",
+    "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
     "tailwind-merge": "^3.3.1"
   },
@@ -32,6 +36,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "knip": "^5.61.1",
+    "peer": "^1.0.2",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.4",
     "typescript": "^5.8.3"

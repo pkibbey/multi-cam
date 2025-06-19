@@ -44,7 +44,7 @@ try {
   // Get local IP for mobile testing
   const { networkInterfaces } = require('os');
   const nets = networkInterfaces();
-  let localIP = 'localhost';
+  let localIP = '192.168.1.207';
   
   for (const name of Object.keys(nets)) {
     for (const net of nets[name]) {
