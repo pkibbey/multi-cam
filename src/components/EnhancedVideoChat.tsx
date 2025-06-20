@@ -2,7 +2,6 @@
 
 import {
 	ControlBar,
-	GridLayout,
 	LiveKitRoom,
 	ParticipantTile,
 	RoomAudioRenderer,
@@ -16,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { liveKitConfig } from "@/config/livekit";
 import { log } from "@/lib/logger";
 import { ParticipantDebugger } from "./ParticipantDebugger";
+import { SimpleVideoGrid } from "./SimpleVideoGrid";
 import "@livekit/components-styles";
 
 interface EnhancedVideoChatProps {
@@ -45,10 +45,10 @@ function VideoGrid() {
 	});
 
 	return (
-		<GridLayout tracks={tracks} style={{ height: "100%" }}>
+		<SimpleVideoGrid tracks={tracks} style={{ height: "100%" }}>
 			{/* ParticipantTile will automatically render the track */}
 			<ParticipantTile />
-		</GridLayout>
+		</SimpleVideoGrid>
 	);
 }
 

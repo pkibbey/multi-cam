@@ -130,9 +130,11 @@
   border-radius: 8px !important;
 }
 
-.lk-grid-layout {
-  gap: 16px !important;
-  padding: 16px !important;
+/* Simple video grid and participant tiles */
+.simple-video-grid > * {
+  min-height: 200px;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 /* Ensure video elements are visible */

@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { liveKitConfig } from "@/config/livekit";
 import { log } from "@/lib/logger";
-import { ParticipantDebugger } from "./ParticipantDebugger";
 import "@livekit/components-styles";
 
 interface VideoChatProps {
@@ -157,7 +156,6 @@ export function VideoChat({ roomName, deviceName, onLeave }: VideoChatProps) {
 				{/* Video conference area */}
 				<div className="flex-1 relative bg-gray-100">
 					<VideoConference />
-					<ParticipantDebugger />
 				</div>
 
 				{/* Audio renderer for participants */}

@@ -264,60 +264,65 @@ export function RoomManager({
 					) : (
 						<div className="space-y-2 max-h-64 overflow-y-auto">
 							{rooms.map((room) => (
-								<button
+								<div
 									key={room.sid}
-									type="button"
-									className={`w-full p-3 border rounded-lg cursor-pointer transition-colors text-left ${
-										selectedRoom === room.name
-											? "border-blue-500 bg-blue-50"
-											: "border-gray-200 hover:border-gray-300"
-									}`}
-									onClick={() => onRoomSelected(room.name)}
-									onKeyDown={(e) => {
-										if (e.key === "Enter" || e.key === " ") {
-											e.preventDefault();
-											onRoomSelected(room.name);
-										}
-									}}
+									className="flex items-center justify-between"
 								>
-									<div className="flex items-center justify-between">
-										<div className="flex-1">
-											<div className="flex items-center gap-2">
-												<span className="font-medium">{room.name}</span>
-												{selectedRoom === room.name && (
-													<Badge variant="default" className="text-xs">
-														Selected
-													</Badge>
-												)}
-											</div>
-											<div className="text-xs text-gray-500 mt-1">
-												Participants: {room.numParticipants} /{" "}
-												{room.maxParticipants}
-											</div>
-											<div className="text-xs text-gray-500">
-												Created: {formatDate(room.creationTime)}
+									<button
+										key={room.sid}
+										type="button"
+										className={`w-full p-3 border rounded-lg cursor-pointer transition-colors text-left ${
+											selectedRoom === room.name
+												? "border-blue-500 bg-blue-50"
+												: "border-gray-200 hover:border-gray-300"
+										}`}
+										onClick={() => onRoomSelected(room.name)}
+										onKeyDown={(e) => {
+											if (e.key === "Enter" || e.key === " ") {
+												e.preventDefault();
+												onRoomSelected(room.name);
+											}
+										}}
+									>
+										<div className="flex items-center justify-between">
+											<div className="flex-1">
+												<div className="flex items-center gap-2">
+													<span className="font-medium">{room.name}</span>
+													{selectedRoom === room.name && (
+														<Badge variant="default" className="text-xs">
+															Selected
+														</Badge>
+													)}
+												</div>
+												<div className="text-xs text-gray-500 mt-1">
+													Participants: {room.numParticipants} /{" "}
+													{room.maxParticipants}
+												</div>
+												<div className="text-xs text-gray-500">
+													Created: {formatDate(room.creationTime)}
+												</div>
 											</div>
 										</div>
-										<div className="flex items-center gap-2">
-											{room.numParticipants > 0 && (
-												<Badge variant="secondary" className="text-xs">
-													Active
-												</Badge>
-											)}
-											<Button
-												onClick={(e) => {
-													e.stopPropagation();
-													deleteRoom(room.name);
-												}}
-												variant="destructive"
-												size="sm"
-												className="text-xs"
-											>
-												Delete
-											</Button>
-										</div>
+									</button>
+									<div className="flex items-center gap-2">
+										{room.numParticipants > 0 && (
+											<Badge variant="secondary" className="text-xs">
+												Active
+											</Badge>
+										)}
+										<Button
+											onClick={(e) => {
+												e.stopPropagation();
+												deleteRoom(room.name);
+											}}
+											variant="destructive"
+											size="sm"
+											className="text-xs"
+										>
+											Delete
+										</Button>
 									</div>
-								</button>
+								</div>
 							))}
 						</div>
 					)}
