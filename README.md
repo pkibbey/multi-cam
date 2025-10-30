@@ -1,104 +1,79 @@
-# Video Chat: Real-Time Communication Made Easy
+# Video Chat
 
-## A simple, yet powerful video chat application built with TypeScript.
+A video chat application that allows users to stream their own multi-cam setup using old phones
 
-**About**
 
-Video Chat is a project designed to provide a foundational, easily extensible video chat experience. It aims to be a starting point for developers looking to build custom video communication solutions, offering core functionality without unnecessary complexity.  Whether you's building a collaborative workspace, a remote learning platform, or just experimenting with real-time communication, this project provides a solid base to build upon.  The focus is on clarity and modularity, making it easy to understand, modify, and integrate into your own projects.
 
-**Key Features**
+## About
 
-*   📹 **Real-time Video Streaming:**  Seamless video transmission between users.
-*   🎤 **Audio Communication:** Clear audio support for natural conversations.
-*   🤝 **Peer-to-Peer Connectivity:**  Direct connections between users for efficient communication.
-*   🌐 **Cross-Platform Compatibility:** Designed to work across various browsers and potentially adaptable for mobile.
-*   🛠️ **Modular Architecture:**  Easy to extend and customize with your own features.
+A video chat application that allows users to stream their own multi-cam setup using old phones Whether you're looking to track your repositories, analyze their performance, or generate documentation, this tool is designed to help.
 
-**Getting Started**
+## Features
 
-Before you begin, ensure you have the following prerequisites installed:
+- ✨ Repository management
+- 🚀 Automated workflows
+- 📊 Data analysis
+- 🔧 Easy configuration
+- 📝 Comprehensive documentation
+- 🧠 Built with TypeScript
 
-*   **Node.js:** (Version 16 or higher) - Download from [https://nodejs.org/](https://nodejs.org/)
-*   **npm (Node Package Manager):**  Comes bundled with Node.js
+## Getting Started
 
-**Installation Steps:**
+### Prerequisites
 
-1.  **Clone the Repository:**
-    ```bash
-    git clone https://github.com/pkibbey/video-chat.git
-    cd video-chat
-    ```
+- Git
+- Node.js (v14 or higher) or your project's required runtime
+- Your system's package manager (npm, yarn, pnpm, or bun)
 
-2.  **Install Dependencies:**
-    ```bash
-    npm install
-    ```
+### Installation
 
-3. **Build the Project** (Optional, but recommended for production)
+1. Clone the repository:
    ```bash
-   npm run build
+   git clone https://github.com/pkibbey/video-chat.git
+   cd video-chat
    ```
 
-**Usage**
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-The application uses a simple peer-to-peer connection model.  Each user needs to provide a unique room name to join or create a new chat session.
+3. Configure your environment:
+   Create a `.env.local` file with any required environment variables.
 
-**Starting a New Chat Session:**
+4. Start the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
 
-1.  Open your terminal and navigate to the project directory.
-2.  Run the following command:
+## Usage
 
-    ```bash
-    npm start --room <your_unique_room_name>
-    ```
+[Add usage examples and instructions here]
 
-    Replace `<your_unique_room_name>` with a descriptive name (e.g., "meeting-1", "study-group").
+## Contributing
 
-**Joining an Existing Chat Session:**
+We welcome contributions! Please follow these steps:
 
-1.  Open your terminal and navigate to the project directory.
-2.  Run the following command:
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-    ```bash
-    npm start --room <existing_room_name>
-    ```
+## License
 
-    Replace `<existing_room_name>` with the room name provided by the user who started the session.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-**Example Scenario:**
+## Support
 
-*   User A starts a chat room named "project-discussion".
-    ```bash
-    npm start --room project-discussion
-    ```
+For questions or issues, please open an issue on [GitHub Issues](https://github.com/pkibbey/video-chat/issues).
 
-*   User B wants to join the same chat. They run:
-    ```bash
-    npm start --room project-discussion
-    ```
+---
 
-Both users will now be connected in the same video chat session.  The application provides basic controls for muting audio and stopping video.
+**Repository:** [pkibbey/video-chat](https://github.com/pkibbey/video-chat)
 
-**Contributing**
-
-We welcome contributions to Video Chat!  Here's how you can help:
-
-1.  **Fork the Repository:** Click the "Fork" button on this page to create a copy of the repository in your own GitHub account.
-2.  **Create a Branch:** Create a new branch for your feature or bug fix: `git checkout -b <your-branch-name>`
-3.  **Make Changes:** Implement your changes, ensuring code adheres to the project's style guidelines (currently informal but aiming for consistency).
-4.  **Test Thoroughly:** Write unit tests and manually test your changes to ensure they function correctly.
-5.  **Submit a Pull Request:** Create a pull request from your branch to the `main` branch.  Provide a clear description of your changes and why they are needed.
-6. **Code Style:** While not strictly enforced, we encourage you to follow standard TypeScript coding conventions.
-
-**License**
-
-This project is licensed under the [MIT License](LICENSE). See the `LICENSE` file for details.
-
-**Support & Issues**
-
-*   **GitHub Issues:**  Report bugs, suggest features, or ask questions on the [Issues](https://github.com/pkibbey/video-chat/issues) page.
-*   **Documentation:**  Future documentation will be added to the repository.
-
-[Build Status Placeholder]
-[License Badge Placeholder]
-[Version Badge Placeholder]
+Generated with ❤️
