@@ -1,6 +1,6 @@
 # Video Chat Application
 
-A multi-camera video conferencing app that allows users to connect multiple devices (like old phones) to a single room, creating a seamless multi-cam experience. The application intelligently switches between microphones based on which device detects the loudest audio, eliminating feedback and enabling users to move freely while presenting.
+A multi-camera video conferencing app that allows users to connect multiple devices on the same network (like old phones) to a single room, creating a seamless multi-cam experience. The application intelligently switches between microphones based on which device detects the loudest audio, eliminating feedback and enabling users to move freely while presenting.
 
 <!-- [Live Demo](https://...) -->
 
